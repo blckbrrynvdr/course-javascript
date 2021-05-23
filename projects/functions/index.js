@@ -12,9 +12,7 @@
 
  Другими словами: функция должна возвращать в неизменном виде то, что поступает ей на вход
  */
-function returnFirstArgument(param) {
-  return param;
-}
+const returnFirstArgument = (param) => param;
 
 /*
  Задание 2:
