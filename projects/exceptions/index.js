@@ -1,5 +1,29 @@
 /* ДЗ 3 - работа с исключениями и отладчиком */
 
+/* Вынес повторяющиеся валидации отдельно чтоб не дублировать код */
+
+/**
+ * Валидация массивов
+ * @param {[array]} array
+ */
+const validArray = (array) => {
+  if (!(array instanceof Array)) {
+    throw new Error('empty array');
+  }
+  if (array.length === 0) {
+    throw new Error('empty array');
+  }
+};
+/**
+ * Валидация функций
+ * @param {[function]} fn
+ */
+const validFnction = (fn) => {
+  if (typeof fn !== 'function') {
+    throw new Error('fn is not a function');
+  }
+};
+
 /*
  Задание 1:
 
@@ -16,7 +40,19 @@
    isAllTrue([1, 2, 3, 4, 5], n => n < 10) // вернет true
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
-function isAllTrue(array, fn) {}
+function isAllTrue(array, fn) {
+  validArray(array);
+  validFnction(fn);
+
+  let isValide = false;
+  for (let i = 0; i < array.length; i++) {
+    if (!fn(array[i])) {
+      return false;
+    }
+    isValide = true;
+  }
+  return isValide;
+}
 
 /*
  Задание 2:
@@ -34,7 +70,19 @@ function isAllTrue(array, fn) {}
    isSomeTrue([1, 2, 30, 4, 5], n => n > 20) // вернет true
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
-function isSomeTrue(array, fn) {}
+function isSomeTrue(array, fn) {
+  validArray(array);
+  validFnction(fn);
+
+  let isValide = false;
+  for (let i = 0; i < array.length; i++) {
+    if (fn(array[i])) {
+      return true;
+    }
+    isValide = false;
+  }
+  return isValide;
+}
 
 /*
  Задание 3:
@@ -47,7 +95,19 @@ function isSomeTrue(array, fn) {}
  3.3: Необходимо выбрасывать исключение в случаях:
    - fn не является функцией (с текстом "fn is not a function")
  */
-function returnBadArguments(fn, ...args) {}
+function returnBadArguments(fn, ...args) {
+  validFnction(fn);
+
+  const exseptions = [];
+  for (let i = 0; i < args.length; i++) {
+    try {
+      fn(args[i]);
+    } catch (e) {
+      exseptions.push(args[i]);
+    }
+  }
+  return exseptions;
+}
 
 /*
  Задание 4:
@@ -66,7 +126,38 @@ function returnBadArguments(fn, ...args) {}
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator(number = 0) {}
+function calculator(number = 0) {
+  if (!isFinite(number)) {
+    throw new Error('number is not a number');
+  }
+
+  return {
+    sum: function (...args) {
+      args.forEach((element) => {
+        number += element;
+      });
+
+      return number;
+    },
+    dif: function (...args) {
+      number = args.reduce((prev, current) => prev - current, number);
+
+      return number;
+    },
+    div: function (...args) {
+      if (args.find((element) => element === 0) === 0) {
+        throw new Error('division by 0');
+      }
+      number = args.reduce((prev, current) => prev / current, number);
+
+      return number;
+    },
+    mul: function (...args) {
+      args.map((element) => (number *= element));
+      return number;
+    },
+  };
+}
 
 /* При решении задач, постарайтесь использовать отладчик */
 
