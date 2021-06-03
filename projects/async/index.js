@@ -136,9 +136,8 @@ filterInput.addEventListener('input', function (e) {
   if (search.trim().length === 0) {
     return false;
   }
-  console.log('event');
-  const fragment = new DocumentFragment();
 
+  const fragment = new DocumentFragment();
 
   cities.forEach(city => {
     if (isMatching(city.name, search)) {
@@ -151,4 +150,7 @@ filterInput.addEventListener('input', function (e) {
   filterResult.appendChild(fragment);
 });
 
-export { loadTowns, isMatching };
+export {
+  loadTowns,
+  isMatching
+};
