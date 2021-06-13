@@ -21,7 +21,57 @@ const homeworkContainer = document.querySelector('#app');
 
 document.addEventListener('mousemove', (e) => {});
 
-export function createDiv() {}
+let draggDiv;
+
+const setPosition = (element, x, y) => {
+  element.style.left = x;
+  element.style.top = y;
+};
+
+document.addEventListener('dragstart', (e) => {
+  draggDiv = {
+    element: e.target,
+    offsetX: e.offsetX,
+    offsetY: e.offsetY,
+  };
+});
+document.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  setPosition(
+    draggDiv.element,
+    `${e.clientX - draggDiv.offsetX}px`,
+    `${e.clientY - draggDiv.offsetY}px`
+  );
+});
+document.addEventListener('drop', (e) => {
+  setPosition(
+    draggDiv.element,
+    `${e.clientX - draggDiv.offsetX}px`,
+    `${e.clientY - draggDiv.offsetY}px`
+  );
+});
+
+export function createDiv() {
+  const div = document.createElement('div');
+  const randomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+  /* Добавляем класс и разрешаем таскать*/
+  div.classList = 'draggable-div';
+  div.draggable = true;
+  /* Устанавливаем случайный размер */
+  div.style.height = `${randomNumber(100, 500)}px`;
+  div.style.width = `${randomNumber(100, 500)}px`;
+  /* Красим в случайный цвет */
+  div.style.backgroundColor = `rgb(
+    ${randomNumber(0, 255)},
+    ${randomNumber(0, 255)},
+    ${randomNumber(0, 255)}
+  )`;
+  /* Закидываем в рандомное место на экране */
+  div.style.top = `${randomNumber(0, window.innerHeight)}px`;
+  div.style.left = `${randomNumber(0, window.innerWidth)}px`;
+
+  return div;
+}
 
 const addDivButton = homeworkContainer.querySelector('#addDiv');
 
