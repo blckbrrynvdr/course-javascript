@@ -45,8 +45,124 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-filterNameInput.addEventListener('input', function () {});
+/* При загрузке страницы сразу пытаемся рендерить куки */
+window.addEventListener('DOMContentLoaded', () => {
+  renderCookiesList();
+});
 
-addButton.addEventListener('click', () => {});
+/* При вводе в поле фильтра перерисовываем таблицу с учетом фильтра */
+filterNameInput.addEventListener('input', function () {
+  renderCookiesList(this.value);
+});
 
-listTable.addEventListener('click', (e) => {});
+/* При добавлении новой куки устанавливаем куку, перерисовываем таблицу в соответствии с фильтром*/
+addButton.addEventListener('click', () => {
+  setCookie(addNameInput.value, addValueInput.value);
+  renderCookiesList(filterNameInput.value);
+});
+
+/**
+ *  Функция отрисовки таблицы.
+ *  @param {data} string строка для поиска в имени или в значении куки
+ *
+ */
+function renderCookiesList(data = '') {
+  /* Сначала удаляем содержимое таблицы*/
+  listTable.innerHTML = '';
+  /* Отфильтровываем список кук и отрисовываем подходящие */
+  filterCookies(data).forEach((element) => {
+    createTableLine(element);
+  });
+}
+/**
+ *  Функция создания DOM элементов для таблицы
+ *  @param {data} object объект с данными о куке
+ *
+ */
+function createTableLine(data) {
+  const line = document.createElement('tr');
+  const name = document.createElement('td');
+  const value = document.createElement('td');
+  const deleteCell = document.createElement('td');
+  const deleteBtn = document.createElement('button');
+
+  name.textContent = data.name;
+  value.textContent = data.value;
+  deleteBtn.textContent = 'X';
+  deleteBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    line.remove();
+    deleteCookie(data.name);
+  });
+  deleteCell.append(deleteBtn);
+  line.append(name, value, deleteBtn);
+  listTable.append(line);
+}
+/**
+ *  Фильтрация кук
+ *  @param {fragment} string Строка по которой будет происходить фильтрация (частичное совпадение)
+ *  @return {array} отфильтрованный массив объектов кук
+ */
+function filterCookies(fragment = '') {
+  return getCookiesList().filter((element) => {
+    if (element?.name.includes(fragment) || element?.value.includes(fragment)) {
+      return element;
+    }
+  });
+}
+/**
+ *  Получение кук
+ *  @return {array} массив объектов кук
+ */
+function getCookiesList() {
+  return document.cookie.split('; ').map((element) => {
+    const [name, value] = element.split('=');
+    if (name.length > 0) {
+      return {
+        name: name,
+        value: value,
+      };
+    }
+  });
+}
+/**
+ *  Установка кук
+ *  @param {name} string имя куки
+ *  @param {value} string значение куки
+ *  @param {options} object дополнительные параметры
+ *  @return {object} объект с данными куки
+ */
+function setCookie(name, value, options = {}) {
+  options = {
+    path: '/',
+    ...options,
+  };
+
+  let updatedCookie = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+
+  for (const optionKey in options) {
+    updatedCookie += '; ' + optionKey;
+    const optionValue = options[optionKey];
+
+    if (optionValue !== true) {
+      updatedCookie += '=' + optionValue;
+    }
+  }
+
+  document.cookie = updatedCookie;
+
+  return {
+    name: name,
+    value: value,
+  };
+}
+/**
+ *  Удаление куки
+ *  @param {name} string имя куки
+ *  @return {void} отрабатывает и ничего не возвращает. Жмотина а не функция
+ */
+function deleteCookie(name) {
+  setCookie(name, '', {
+    'max-age': -1,
+  });
+}
