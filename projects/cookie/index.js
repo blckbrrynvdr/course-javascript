@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* При вводе в поле фильтра перерисовываем таблицу с учетом фильтра */
 filterNameInput.addEventListener('input', function () {
-  renderCookiesList(this.value);
+  renderCookiesList(this.value.trim());
 });
 
 /* При добавлении новой куки устанавливаем куку, перерисовываем таблицу в соответствии с фильтром*/
@@ -70,9 +70,15 @@ function renderCookiesList(data = '') {
   /* Сначала удаляем содержимое таблицы*/
   listTable.innerHTML = '';
   /* Отфильтровываем список кук и отрисовываем подходящие */
-  filterCookies(data).forEach((element) => {
-    createTableLine(element);
-  });
+  if (data) {
+    filterCookies(data).forEach((element) => {
+      createTableLine(element);
+    });
+  } else {
+    getCookiesList().forEach((element) => {
+      createTableLine(element);
+    });
+  }
 }
 /**
  *  Функция создания DOM элементов для таблицы
@@ -80,6 +86,9 @@ function renderCookiesList(data = '') {
  *
  */
 function createTableLine(data) {
+  if (!data) {
+    return;
+  }
   const line = document.createElement('tr');
   const name = document.createElement('td');
   const value = document.createElement('td');
