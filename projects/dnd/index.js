@@ -61,11 +61,10 @@ export function createDiv() {
   div.style.height = `${randomNumber(100, 500)}px`;
   div.style.width = `${randomNumber(100, 500)}px`;
   /* Красим в случайный цвет */
-  div.style.backgroundColor = `rgb(
-    ${randomNumber(0, 255)},
-    ${randomNumber(0, 255)},
-    ${randomNumber(0, 255)}
-  )`;
+  div.style.backgroundColor = `rgb(${randomNumber(0, 255)},${randomNumber(
+    0,
+    255
+  )},${randomNumber(0, 255)})`;
   /* Закидываем в рандомное место на экране */
   div.style.top = `${randomNumber(0, window.innerHeight)}px`;
   div.style.left = `${randomNumber(0, window.innerWidth)}px`;
