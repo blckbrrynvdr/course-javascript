@@ -101,6 +101,9 @@ function updateTable() {
   listTable.innerHTML = '';
 
   for (const cookie in cookiesData) {
+    if (!Object.prototype.hasOwnProperty.call(cookiesData, cookie)) {
+      continue;
+    }
     const name = cookie;
     const value = cookiesData[cookie];
     if (
@@ -129,12 +132,12 @@ function updateTable() {
     removeTD.append(removeButton);
 
     fragment.append(tr);
+  }
 
-    if (elements) {
-      listTable.parentNode.classList.remove('hidden');
-      listTable.append(fragment);
-    } else {
-      listTable.parentNode.classList.add('hidden');
-    }
+  if (elements) {
+    listTable.parentElement.classList.remove('hidden');
+    listTable.append(fragment);
+  } else {
+    listTable.parentElement.classList.add('hidden');
   }
 }
