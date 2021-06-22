@@ -54,6 +54,23 @@
     .commentItem__info, .commentItem__text {
         color: #8F8F8F;
     }
+
+    .carousel {
+        display: flex;
+    }
+    .carousel__content {
+        display: none;
+    }
+    .carousel__controls-box {
+        padding: 10px;
+        border-right: 1px solid;
+        width: 40%;
+    }
+
+    .carousel__tab {
+        border-bottom: 1px solid #000;
+        margin-bottom: 10px;
+    }
     
 </style>
 
@@ -85,4 +102,16 @@
         </div>
         <button class="addComment__btn" data-action="add-review">Добавить</button>
     </form>
+</script>
+
+
+<script type="template" id="carouselTemplate">
+	<div class="carousel">
+		<div class="carousel__controls-box">
+			
+		</div>
+		<div class="carousel__content">
+			
+		</div>
+	</div>
 </script>
