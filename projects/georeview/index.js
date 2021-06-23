@@ -1,4 +1,5 @@
 const ymaps = window.ymaps;
+const swiper = window.Swiper;
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -36,8 +37,9 @@ function init() {
   map.geoObjects.add(clusterer);
 
   // открыть балун
-  const openBalloon = (coords, content) => {
+  const openBalloon = async (coords, content) => {
     map.balloon.open(coords, content);
+    document.title = await getAddress(coords);
   };
 
   // закрыть балун
@@ -55,17 +57,31 @@ function init() {
       targetClusterer.getGeoObjects().forEach((obj) => {
         // формируем данные под карусельку
         const objectCoordiates = obj.geometry.getCoordinates();
-        const coordinateId = objectCoordiates.join('');
+        const coordinateId = JSON.stringify(objectCoordiates);
         const coordsData = storageGetData(objectCoordiates);
         const placeData = {
           data: coordsData,
           address: coordsData[0].address,
+          coords: objectCoordiates,
           coordsId: coordinateId,
         };
         places[objectCoordiates] = placeData;
       });
+
       openBalloon(coords, createCarousel(places));
-      console.log('places', places);
+      setTimeout(() => {
+        new swiper('.swiper-container', {
+          slidesPerView: 1,
+          scrollbar: {
+            el: '.swiper-scrollbar',
+          },
+        });
+      }, 500);
+    } else {
+      const objectCoordiates = targetClusterer.geometry.getCoordinates();
+      const coordsData = storageGetData(objectCoordiates);
+      const form = createForm(objectCoordiates, coordsData);
+      openBalloon(objectCoordiates, form);
     }
 
     // const list = storageGetData(coords);
@@ -75,44 +91,33 @@ function init() {
   };
 
   function createCarousel(data) {
-    const container = document.createElement('div');
-    container.innerHTML = document.querySelector('#carouselTemplate').innerHTML;
-    const controlsWrap = container.querySelector('.carousel__controls-box');
-    const contentWrap = container.querySelector('.carousel__content');
+    // создаём болванку слайдера
+    const carouselWrap = document.createElement('div');
+    // пихаем туда вёрстку слайдера
+    carouselWrap.innerHTML = document.querySelector('#carouselTemplate').innerHTML;
+    // сюда добавляем слайды
+    const carouselContainer = carouselWrap.querySelector('.carousel');
 
     for (const tab in data) {
       const currentTab = data[tab];
-      const controlElement = document.createElement('button');
-      controlElement.classList.add('carousel__control');
-      controlElement.dataset.role = 'control-btn';
-      controlElement.textContent = currentTab.address;
-      controlsWrap.append(controlElement);
+      // теперь каждый слайд
+      const slideWrap = document.createElement('div');
+      slideWrap.innerHTML = document.querySelector('#carouselSlideTemplate').innerHTML;
+      const slideHimself = slideWrap.querySelector('.carousel__slide');
+      const slideContent = slideWrap.querySelector('.carousel__content');
+      const button = slideWrap.querySelector('.carousel__address');
+      button.dataset.coords = currentTab.coordsId;
+      button.textContent = currentTab.address;
 
-      const contentTab = document.createElement('div');
-      contentTab.classList.add('carousel__tab');
-
-      console.log('data[tab].data', data[tab].data);
       currentTab.data.forEach((review) => {
         const reviewDiv = document.createElement('div');
-        reviewDiv.classList.add('commentsList__item', 'commentItem');
-        const { name, place, text, time } = review;
-
-        reviewDiv.innerHTML = `
-          <div class="commentItem">
-            <div class="commentItem__head">
-              <span class="commentItem__autor">${name}</span>
-              <span class="commentItem__info">${place}</span>
-              <span class="commentItem__info">${time}</span>
-            </div>
-            <div class="commentItem__text">${text}</div>
-          </div>
-          `;
-        contentTab.append(reviewDiv);
+        reviewDiv.innerHTML = createReview(review);
+        slideContent.append(reviewDiv);
       });
-      contentWrap.append(contentTab);
+      carouselContainer.append(slideHimself);
     }
 
-    return container.innerHTML;
+    return carouselWrap.innerHTML;
   }
 
   const createPlacemark = (coords) => {
@@ -135,19 +140,8 @@ function init() {
     if (reviews) {
       for (const item of reviews) {
         const div = document.createElement('div');
-        div.classList.add('commentsList__item', 'commentItem');
-        const { name, place, text, time } = item.review;
-
-        div.innerHTML = `
-          <div class="commentItem">
-            <div class="commentItem__head">
-              <span class="commentItem__autor">${name}</span>
-              <span class="commentItem__info">${place}</span>
-              <span class="commentItem__info">${time}</span>
-            </div>
-            <div class="commentItem__text">${text}</div>
-          </div>
-          `;
+        div.classList.add('commentsList__item');
+        div.innerHTML = createReview(item);
         reviewList.appendChild(div);
       }
     }
@@ -155,8 +149,31 @@ function init() {
     return container.innerHTML;
   };
 
+  const createReview = (data) => {
+    const { name, place, text, time } = data.review;
+
+    const review = `
+      <div class="commentItem">
+        <div class="commentItem__head">
+          <span class="commentItem__autor">${name}</span>
+          <span class="commentItem__info">${place}</span>
+          <span class="commentItem__info">${time}</span>
+        </div>
+        <div class="commentItem__text">${text}</div>
+      </div>
+      `;
+    return review;
+  };
+
   const addReview = async (e) => {
     e.preventDefault();
+    if (e.target.dataset.action === 'show-reviews') {
+      const button = e.target;
+      const coords = JSON.parse(button.dataset.coords);
+      const reviews = storageGetData(coords);
+      const form = createForm(coords, reviews);
+      openBalloon(coords, form);
+    }
     if (e.target.dataset.action === 'add-review') {
       // ищем форму
       const form = document.querySelector('form[data-form=add-review]');
@@ -228,8 +245,6 @@ function getDateNow() {
 async function getAddress(coords) {
   const address = await ymaps.geocode(coords);
   const res = address.geoObjects.get(0).getAddressLine();
-  // .then((result) => {
-  //   return result.geoObjects.get(0).getAddressLine();
-  // });
+
   return res;
 }

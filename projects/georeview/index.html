@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 <style>
     html, body, #map {  
         margin: 0;
@@ -30,7 +31,7 @@
     .addComment__entry::placeholder {
         color: inherit;
     }
-    .addComment__btn {
+    .addComment__btn, .btn {
         cursor: pointer;
         color: #ffffff;
         background: #FF8663;
@@ -42,7 +43,9 @@
         font-weight: bold;
     }
     .commentItem {
-        margin-bottom: 20px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #b4b4b4;
     }
 
     .commentsList {
@@ -59,7 +62,7 @@
         display: flex;
     }
     .carousel__content {
-        display: none;
+        padding: 5px;
     }
     .carousel__controls-box {
         padding: 10px;
@@ -71,13 +74,16 @@
         border-bottom: 1px solid #000;
         margin-bottom: 10px;
     }
+    .carousel__address {
+        width: 100%;
+    }
     
 </style>
 
     <div id="map"></div>
 
    
-
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=e631409f-3014-44a7-80d2-cfa0cc5ac8cd" type="text/javascript">
 </script>
 
@@ -106,12 +112,16 @@
 
 
 <script type="template" id="carouselTemplate">
-	<div class="carousel">
-		<div class="carousel__controls-box">
-			
-		</div>
-		<div class="carousel__content">
-			
-		</div>
-	</div>
+    <div class="swiper-container">
+        <div class="swiper-wrapper carousel"></div>
+        <div class="swiper-scrollbar"></div>
+    </div>
+</script>
+<script type="template" id="carouselSlideTemplate">
+    <div class="swiper-slide carousel__slide">
+        <div class="carousel__head">
+            <button class="carousel__address btn" data-action="show-reviews"></button>
+        </div>
+        <div class="carousel__content"></div>
+    </div>
 </script>
