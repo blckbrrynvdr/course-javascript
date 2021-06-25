@@ -1,0 +1,127 @@
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<style>
+    html, body, #map {  
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        color: #000000;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .addComment {
+        margin-bottom: 0;
+    }
+    .addComment__line {
+        margin-bottom: 10px;
+    }
+    .addComment__entry {
+        width: 310px;
+        padding: 11px;
+        background: #FFFFFF;
+        border: 1px solid #CFCFCF;
+        box-sizing: border-box;
+        border-radius: 3px;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+    .addComment__entry--textarea {
+        height: 98px;
+        resize: none;
+        font-family: inherit;
+    }
+    .addComment__entry::placeholder {
+        color: inherit;
+    }
+    .addComment__btn, .btn {
+        cursor: pointer;
+        color: #ffffff;
+        background: #FF8663;
+        border-radius: 3px;
+        padding: 9px 16px;
+        border: none;
+        font-size: 14px;
+        line-height: 1.2;
+        font-weight: bold;
+    }
+    .commentItem {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #b4b4b4;
+    }
+
+    .commentsList {
+        max-height: 100px;
+        overflow-y: scroll;
+        font-size: 16px;
+        line-height: 1.12;
+    }
+    .commentItem__info, .commentItem__text {
+        color: #8F8F8F;
+    }
+
+    .carousel {
+        display: flex;
+    }
+    .carousel__content {
+        padding: 5px;
+    }
+    .carousel__controls-box {
+        padding: 10px;
+        border-right: 1px solid;
+        width: 40%;
+    }
+
+    .carousel__tab {
+        border-bottom: 1px solid #000;
+        margin-bottom: 10px;
+    }
+    .carousel__address {
+        width: 100%;
+    }
+    
+</style>
+
+    <div id="map"></div>
+
+   
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=e631409f-3014-44a7-80d2-cfa0cc5ac8cd" type="text/javascript">
+</script>
+
+<script src="index.js"></script>
+
+<script type="template" id="addCommentForm">
+    <form class="addComment" data-form="add-review">
+        <div class="commentsList"></div>
+        <h3 class="addComment__title">Отзыв:</h3>
+        <div class="addComment__line">
+            <input type="text" class="addComment__entry" name="name" placeholder="Укажите ваше имя">
+        </div>
+        <div class="addComment__line">
+            <input type="text" class="addComment__entry" name="place" placeholder="Укажите место">
+        </div>
+        <div class="addComment__line">
+            <textarea type="text" 
+                      class="addComment__entry addComment__entry--textarea" 
+                      name="review" 
+                      placeholder="Оставить отзыв"
+            ></textarea>
+        </div>
+        <button class="addComment__btn" data-action="add-review">Добавить</button>
+    </form>
+</script>
+
+
+<script type="template" id="carouselTemplate">
+    <div class="swiper-container">
+        <div class="swiper-wrapper carousel"></div>
+        <div class="swiper-scrollbar"></div>
+    </div>
+</script>
+<script type="template" id="carouselSlideTemplate">
+    <div class="swiper-slide carousel__slide">
+        <div class="carousel__head">
+            <button class="carousel__address btn" data-action="show-reviews"></button>
+        </div>
+        <div class="carousel__content"></div>
+    </div>
+</script>
