@@ -1,7 +1,7 @@
 import './index.html';
 
-import Chat from './chat';
+import ChatApp from './chatApp';
 
 window.addEventListener('DOMContentLoaded', function () {
-  new Chat();
+  new ChatApp();
 });

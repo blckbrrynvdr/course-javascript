@@ -344,7 +344,7 @@
                     <img src="../projects/chatProject/assets/img/menu.svg" alt="" class="users-bar__menu-pic">
                 </button>
             </div>
-            <ul class="users-bar__list">
+            <ul class="users-bar__list" id="users-list">
                 <li class="users-bar__item common-user">
                     <div class="common-user__avatar user-avatar">
                         <img src="../projects/chatProject/assets/img/boroda.png" class="user-avatar__pic">
@@ -373,7 +373,7 @@
                     участника
                 </div>
             </div>
-            <div class="chat__window bg bg--theme-uncommon">
+            <div class="chat__window bg bg--theme-uncommon" id="message-list">
                 <div class="chat__message message-box">
                     <div class="message-box__avatar user-avatar">
                         <img src="" alt="" class="user-avatar__pic">
@@ -394,11 +394,11 @@
                 </div>
             </div>
             <div class="chat__footer bg bg--theme-common">
-                <form class="chat__messenger">
+                <form class="chat__messenger" id="message-sender">
 
-                    <textarea class="chat__entry-elem common-input common-input--textarea"
+                    <textarea id="message-input" name="message" class="chat__entry-elem common-input common-input--textarea"
                         placeholder="Введите сообщение..."></textarea>
-                    <div class="chat__send btn btn--theme-uncommon">Отправить</div>
+                    <button id="message-send" class="chat__send btn btn--theme-uncommon">Отправить</div>
                 </form>
             </div>
         </div>
@@ -415,3 +415,47 @@
 </div>
 
 </div>
+
+<script type="template" id="user-item">
+    <div class="common-user">
+        <div class="common-user__avatar user-avatar">
+            <img src="../projects/chatProject/assets/img/boroda.png" class="user-avatar__pic">
+        </div>
+        <div class="common-user__info">
+            <div class="common-user__name">Boroda23</div>
+            <div class="common-user__subtext">Рад был пообщаться</div>
+        </div>
+    </div>
+</script>
+
+<script type="template" id="system-message">
+    <div class="system-message"></div>
+</script>
+
+<script type="template" id="message-box">
+    <div class="message-box" data-user="">
+        <div class="message-box__avatar user-avatar">
+            <img src="" alt="" class="user-avatar__pic">
+        </div>
+        <div class="message-box__body">
+            <div class="message-box__author-name">Boroda23</div>
+            <div class="message-box__list">
+                <li class="message-box__item message">
+                    <div class="message__text">Привет!</div>
+                    <date class="message__time">17:55</date>
+                </li>
+                <li class="message-box__item message">
+                    <div class="message__text">Как дела? Нормально?</div>
+                    <date class="message__time">17:55</date>
+                </li>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="template" id="message">
+    <div class="message">
+        <div class="message__text">Как дела? Нормально?</div>
+        <date class="message__time">17:55</date>
+    </div>
+</script>
