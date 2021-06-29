@@ -13,21 +13,19 @@ export default class MessageList {
     } else {
       // const time = format(new Date(), 'kk:mm');
       const wrapper = document.createElement('div');
-      wrapper.innerHTML = document.querySelector('#message-box');
+      wrapper.innerHTML = document.querySelector('#message-box').innerHTML;
       const messageBox = wrapper.querySelector('.message-box');
       const avatar = wrapper.querySelector('.user-avatar__pic');
       const name = wrapper.querySelector('.message-box__author-name');
-      // const messageText = wrapper.querySelector('.message__text');
-      // const messageTime = wrapper.querySelector('.message__time');
 
       messageBox.dataset.user = from;
 
       name.textContent = sanitize(from);
       // messageText.textContent = sanitize(text);
       // messageTime.textContent = time;
-      avatar.src = sanitize(from);
+      avatar.setAttribute('data-user-photo', from);
 
-      this.element.append(wrapper.innerHTML);
+      this.element.append(messageBox);
 
       this.addToExisting(from, text);
 
@@ -38,17 +36,19 @@ export default class MessageList {
   addToExisting(from, text) {
     const time = format(new Date(), 'kk:mm');
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = document.querySelector('#message');
+    wrapper.innerHTML = document.querySelector('#message').innerHTML;
     const messageItem = wrapper.querySelector('.message');
-    const targetMessageBox = document.querySelector(`[data-user=${from}]`);
+    let targetMessageBox = document.querySelectorAll(`[data-user="${from}"]`);
+    targetMessageBox = targetMessageBox[targetMessageBox.length - 1];
+    const targetMessageList = targetMessageBox.querySelector('.message-box__list');
     const textBox = wrapper.querySelector('.message__text');
     const timeBox = wrapper.querySelector('.message__time');
 
-    messageItem.classList.add('.message-box__item');
+    messageItem.classList.add('message-box__item');
     textBox.textContent = text;
     timeBox.textContent = time;
 
-    targetMessageBox.append(messageItem);
+    targetMessageList.append(messageItem);
     this.element.scrollTop = this.element.scrollHeight;
   }
 
@@ -62,7 +62,7 @@ export default class MessageList {
 
   addSystemMessage(message) {
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = document.querySelector('#system-message');
+    wrapper.innerHTML = document.querySelector('#system-message').innerHTML;
     const messageElement = wrapper.querySelector('.system-message');
 
     messageElement.textContent = message;
