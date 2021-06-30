@@ -1,0 +1,10 @@
+{
+  "proxy": {
+    "/chatProject/ws": {
+      "target": "http://localhost:8181",
+      "pathRewrite": {
+        "^/chatProject": ""
+      }
+    }
+  }
+}
