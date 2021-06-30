@@ -4,6 +4,7 @@ export default class UserWindow {
     this.nameElement = element.querySelector('.user-popup__name');
     this.closeElement = element.querySelector('.user-popup__close');
     this.photoBtn = element.querySelector('.user-popup__avatar-box');
+    this.photo = element.querySelector('#avatar-image');
     this.onPhoto = onPhoto;
 
     this.closeElement.addEventListener('click', this.hide.bind(this));
@@ -13,6 +14,8 @@ export default class UserWindow {
   setName(name) {
     this.name = name;
     this.nameElement.textContent = name;
+    this.photo.dataset.userPhoto = name;
+    this.photo.src = `/chatProject/ws/photos/${name}.png?t=${Date.now()}`;
   }
 
   getName() {

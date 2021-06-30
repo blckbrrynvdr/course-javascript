@@ -18,6 +18,7 @@ export default class UserList {
 
       userName.textContent = name;
       avatar.setAttribute('data-user-photo', name);
+      avatar.src = `/chatProject/ws/photos/${name}.png?t=${Date.now()}`;
 
       fragment.append(item);
     }

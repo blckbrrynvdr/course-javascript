@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const Index = require('ws');
-console.log('server is starting');
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -15,29 +14,22 @@ function readBody(req) {
 }
 
 const server = http.createServer(async (req, res) => {
-  console.log('req.url', req.url);
   try {
     if (/\/photos\/.+\.png/.test(req.url)) {
       const [, imageName] = req.url.match(/\/photos\/(.+\.png)/) || [];
       const fallBackPath = path.resolve(__dirname, '../noimage.png');
 
       const filePath = path.resolve(__dirname, '../photos', imageName);
-      console.log('filePath', filePath);
-      console.log('imageName', imageName);
 
       if (fs.existsSync(filePath)) {
-        console.log('existsSync', filePath);
         return fs.createReadStream(filePath).pipe(res);
       } else {
-        console.log('not existsSync', filePath);
         return fs.createReadStream(fallBackPath).pipe(res);
       }
     } else if (req.url.endsWith('/upload-photo')) {
-      console.log('in upload');
       const body = await readBody(req);
       const name = body.name.replace(/\.\.\/|\//, '');
       const [, content] = body.image.match(/data:image\/.+?;base64,(.+)/) || [];
-      console.log('before filepath');
       const filePath = path.resolve(__dirname, '../photos', `${name}.png`);
 
       if (name && content) {
@@ -51,10 +43,8 @@ const server = http.createServer(async (req, res) => {
 
     res.end('ok');
   } catch (e) {
-    console.error(e);
     res.end('fail');
   }
-  console.log('end try catch');
 });
 const wss = new Index.Server({ server });
 const connections = new Map();
@@ -98,11 +88,9 @@ function sendMessageTo(message, to) {
 
 function sendMessageFrom(connections, message, from, excludeSelf) {
   const socketData = connections.get(from);
-  console.log('socketData from', socketData);
   if (!socketData) return;
 
   message.from = socketData.userName;
-  console.log('message', message);
 
   for (const connection of connections.keys()) {
     if (connection === from && excludeSelf) continue;

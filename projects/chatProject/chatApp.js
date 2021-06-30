@@ -7,7 +7,7 @@ import MessageList from './ui/messageList';
 import UserList from './ui/userList';
 import MessageSender from './ui/messageSender';
 import WSClient from './wsClient';
-console.log(`ws://${location.host}/chatProject/ws`);
+
 export default class ChatApp {
   constructor() {
     this.wsClient = new WSClient(
@@ -37,7 +37,8 @@ export default class ChatApp {
       ),
       userPhoto: new UserPhoto(
         document.querySelector('#user-photo'),
-        this.onUpload.bind(this)
+        this.onUpload.bind(this),
+        this.onSavePhoto.bind(this)
       ),
     };
 
@@ -69,25 +70,22 @@ export default class ChatApp {
   }
 
   onMessage({ type, from, data }) {
-    console.log('onMessage type', type);
-    console.log('onMessage from', from);
-    console.log('onMessage data', data);
-
     if (type === 'hello') {
       this.ui.userList.add(from);
       this.ui.messageList.addSystemMessage(`${from} вошел в чат`);
-      this.updatePhotos();
+
+      this.ui.chatWindow.setUsersCount(this.ui.userList.items.size);
     }
     if (type === 'user-list') {
       for (const item of data) {
         this.ui.userList.add(item);
       }
-      this.updatePhotos();
+      this.ui.chatWindow.setUsersCount(this.ui.userList.items.size);
     }
     if (type === 'close-connect') {
       this.ui.userList.remove(from);
       this.ui.messageList.addSystemMessage(`${from} вышел из чата`);
-      this.updatePhotos();
+      this.ui.chatWindow.setUsersCount(this.ui.userList.items.size);
     }
     if (type === 'text-message') {
       this.ui.messageList.add(from, data.message);
@@ -103,13 +101,6 @@ export default class ChatApp {
 
   onUpload(data) {
     this.ui.userPhoto.set(data);
-    fetch('/chatProject/ws/upload-photo', {
-      method: 'post',
-      body: JSON.stringify({
-        name: this.ui.userWindow.getName(),
-        image: data,
-      }),
-    });
   }
 
   onClick() {
@@ -118,5 +109,15 @@ export default class ChatApp {
 
   onPhoto() {
     this.ui.userPhoto.show();
+  }
+
+  async onSavePhoto(data) {
+    fetch('/chatProject/ws/upload-photo', {
+      method: 'post',
+      body: JSON.stringify({
+        name: this.ui.userWindow.getName(),
+        image: data,
+      }),
+    });
   }
 }

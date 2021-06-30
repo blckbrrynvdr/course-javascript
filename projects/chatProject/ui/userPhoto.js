@@ -1,23 +1,33 @@
 export default class UserPhoto {
-  constructor(element, onUpload) {
+  constructor(element, onUpload, onSavePhoto) {
     this.element = element;
+    this.onUpload = onUpload;
+    this.onSavePhoto = onSavePhoto;
     this.closeBtn = element.querySelector('.user-foto__cancel');
     this.saveBtn = element.querySelector('.user-foto__save');
     this.photoInput = element.querySelector('#avatar-input');
     this.photoLabel = element.querySelector('.user-foto__avatar-label');
     this.photoImg = element.querySelector('.user-foto__avatar-image');
-    this.onUpload = onUpload;
+    this.photoData = '';
     this.name = '';
 
     this.closeBtn.addEventListener('click', this.hide.bind(this));
 
     this.photoInput.addEventListener('input', (e) => {
-      console.log('photo input');
       const [file] = this.photoInput.files;
       const reader = new FileReader();
 
       reader.readAsDataURL(file);
-      reader.addEventListener('load', () => this.onUpload(reader.result));
+
+      reader.addEventListener('load', () => {
+        this.photoData = reader.result;
+        return this.onUpload(reader.result);
+      });
+    });
+
+    this.saveBtn.addEventListener('click', () => {
+      this.onSavePhoto(this.photoData);
+      this.hide();
     });
   }
 
@@ -28,16 +38,6 @@ export default class UserPhoto {
 
   setName(name) {
     this.name = name;
-  }
-
-  showUserPhoto() {
-    this.photoLabel.classList.add('hidden');
-    this.photoImg.classList.remove('hidden');
-  }
-
-  showPhotoInput() {
-    this.photoLabel.classList.remove('hidden');
-    this.photoImg.classList.add('hidden');
   }
 
   show() {

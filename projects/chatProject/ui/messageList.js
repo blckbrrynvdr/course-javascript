@@ -11,7 +11,6 @@ export default class MessageList {
     if (this.isFromTheLastUser(from)) {
       this.addToExisting(from, text);
     } else {
-      // const time = format(new Date(), 'kk:mm');
       const wrapper = document.createElement('div');
       wrapper.innerHTML = document.querySelector('#message-box').innerHTML;
       const messageBox = wrapper.querySelector('.message-box');
@@ -19,11 +18,9 @@ export default class MessageList {
       const name = wrapper.querySelector('.message-box__author-name');
 
       messageBox.dataset.user = from;
-
       name.textContent = sanitize(from);
-      // messageText.textContent = sanitize(text);
-      // messageTime.textContent = time;
       avatar.setAttribute('data-user-photo', from);
+      avatar.src = `/chatProject/ws/photos/${from}.png?t=${Date.now()}`;
 
       this.element.append(messageBox);
 
