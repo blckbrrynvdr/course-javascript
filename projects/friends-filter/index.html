@@ -1,0 +1,67 @@
+<div id="app">
+    <div class="container">
+        <div class="head">Выберите друзей</div>
+        <div class="controls">
+            <div class="controls__wrap">
+                <input type="text" class="controls__input" placeholder="Начните вводить имя друга"
+                    data-role="friends-filter" data-id="friends">
+            </div>
+            <div class="controls__wrap">
+                <input type="text" class="controls__input" placeholder="Начните вводить имя друга"
+                    data-role="friends-filter" data-id="best-friends">
+            </div>
+        </div>
+        <div class="friends">
+            <div class="friends__box">
+                <div class="friends__head">Ваши друзья</div>
+                <div class="friends__list" id="friends-list">
+                    <!-- <div class="friends__item friend" draggable="true" data-role="friend" data-friend="1">
+                        <div class="friend__photo">
+                            <img src="{{photo_100}}" alt="{{first_name}}" class="friend__img">
+                        </div>
+                        <div class="friend__name">Вася</div>
+                        <button class="friend__action">></button>
+                    </div>
+                    <div class="friends__item friend" draggable="true" data-role="friend" data-friend="2">
+                        <div class="friend__photo">
+                            <img src="{{photo_100}}" alt="{{first_name}}" class="friend__img">
+                        </div>
+                        <div class="friend__name">Дася</div>
+                        <button class="friend__action">></button>
+                    </div>
+                    <div class="friends__item friend" draggable="true" data-role="friend" data-friend="3">
+                        <div class="friend__photo">
+                            <img src="{{photo_100}}" alt="{{first_name}}" class="friend__img">
+                        </div>
+                        <div class="friend__name">Гася</div>
+                        <button class="friend__action">></button>
+                    </div> -->
+                </div>
+            </div>
+            <div class="friends__box">
+                <div class="friends__head">Друзья в списке</div>
+                <div class="friends__list" id="best-friends-list">
+                    
+                </div>
+            </div>
+        </div>
+        <footer class="footer"></footer>
+    </div>
+</div>
+
+
+<script id="user-template" type="text/x-handlebars-template">
+    <div class="friends-list">
+        {{#each items}}
+            <div class="friends__item friend" draggable="true" data-role="friend" data-friend="{{id}}">
+                <div class="friend__photo">
+                    <img src="{{photo_100}}" alt="{{first_name}}" class="friend__img">
+                </div>
+                <div class="friend__name">{{first_name}} {{last_name}}</div>
+                <button class="friend__action" data-friend="{{id}}">></button>
+            </div>
+        {{/each}}
+       </div>
+   </script>
+   <!-- <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script> -->
+   <div id="vk_api_transport"></div>
