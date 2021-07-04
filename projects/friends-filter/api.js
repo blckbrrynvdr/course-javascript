@@ -58,10 +58,9 @@ export default class Api {
 
   async getFriends() {
     try {
-      const friends = await this.callAPI('friends.get', {
+      return await this.callAPI('friends.get', {
         fields: 'photo_100',
       });
-      return friends;
     } catch (e) {
       console.log(e);
     }

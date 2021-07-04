@@ -10,8 +10,14 @@ export default class App {
       this.dropHandler.bind(this)
     );
 
-    this.friendsList = new UsersList(document.querySelector('#friends-list'));
-    this.bestFriendsList = new UsersList(document.querySelector('#best-friends-list'));
+    this.friendsList = new UsersList(
+      document.querySelector('#friends-list'),
+      document.querySelector('#user-template')
+    );
+    this.bestFriendsList = new UsersList(
+      document.querySelector('#best-friends-list'),
+      document.querySelector('#best-user-template')
+    );
 
     this.friendsInput = document.querySelector('[data-id="friends"]');
     this.friendsInput.addEventListener('input', this.filter.bind(this));
@@ -38,14 +44,24 @@ export default class App {
       const [user] = this.getDataByElement(element);
 
       if (list === 'best-friends-list') {
-        target.textContent = '>';
-        this.friendsList.addUser(user, element);
-        this.bestFriendsList.deleteUser(user);
+        this.moveFriend(user, element, target, 'to-friends');
       } else {
-        target.textContent = 'X';
-        this.bestFriendsList.addUser(user, element);
-        this.friendsList.deleteUser(user);
+        this.moveFriend(user, element, target);
       }
+    }
+  }
+
+  moveFriend(user, element, button, type = '') {
+    if (type === 'to-friends') {
+      button.textContent = '>';
+      button.classList.remove('friend__action--theme-cancel');
+      this.friendsList.addUser(user, element);
+      this.bestFriendsList.deleteUser(user);
+    } else {
+      button.textContent = 'X';
+      button.classList.add('friend__action--theme-cancel');
+      this.bestFriendsList.addUser(user, element);
+      this.friendsList.deleteUser(user);
     }
   }
 
@@ -60,6 +76,7 @@ export default class App {
       e.dataTransfer.setData('text/html', 'dragstart');
     }
   }
+
   dragOverHandler(e) {
     const zone = this.dragger.getCurrentZone(e.target);
 
@@ -88,13 +105,9 @@ export default class App {
     const [user] = this.getDataByElement(element);
 
     if (this.dragger.droppedZone.id === 'friends-list') {
-      button.textContent = '>';
-      this.friendsList.addUser(user, element);
-      this.bestFriendsList.deleteUser(user);
+      this.moveFriend(user, element, button, 'to-friends');
     } else {
-      button.textContent = 'X';
-      this.bestFriendsList.addUser(user, element);
-      this.friendsList.deleteUser(user);
+      this.moveFriend(user, element, button);
     }
   }
 

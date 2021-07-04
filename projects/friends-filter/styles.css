@@ -119,10 +119,20 @@ body {
 }
 
 .friend__action {
-    border: 0;
+    cursor: pointer;
+    border: 1px solid #FE8663;
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: #FE8663;
+    font-weight: bold;
     background: transparent;
     display: block;
     margin-left: auto;
+}
+
+.friend__action--theme-cancel {
+    border-color: #cbc9c9;
+    color: #cbc9c9;
 }
 
 .footer {

@@ -1,15 +1,10 @@
 import Handlebars from 'handlebars';
 
 export default class UsersList {
-  constructor(element) {
+  constructor(element, template) {
     this.element = element;
     this.users = [];
-    // this.onChange = onChange;
-
-    // this.filterInput = document.querySelector('[data-id="friends"]');
-    // this.filterInput.addEventListener('input', () => {
-
-    // })
+    this.template = template;
   }
 
   addUser(user, element) {
@@ -43,10 +38,9 @@ export default class UsersList {
   render(elements) {
     this.element.innerHTML = '';
 
-    const template = document.querySelector('#user-template').textContent;
+    const template = this.template.textContent;
     const render = Handlebars.compile(template);
-    const html = render(elements);
 
-    this.element.innerHTML = html;
+    this.element.innerHTML = render(elements);
   }
 }

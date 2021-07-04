@@ -39,8 +39,21 @@
                 <button class="friend__action" data-friend="{{id}}">></button>
             </div>
         {{/each}}
-       </div>
-   </script>
+    </div>
+</script>
 
+<script id="best-user-template" type="text/x-handlebars-template">
+    <div class="friends-list">
+        {{#each items}}
+            <div class="friends__item friend" draggable="true" data-role="friend" data-friend="{{id}}">
+                <div class="friend__photo">
+                    <img src="{{photo_100}}" alt="{{first_name}}" class="friend__img">
+                </div>
+                <div class="friend__name">{{first_name}} {{last_name}}</div>
+                <button class="friend__action friend__action--theme-cancel" data-friend="{{id}}">X</button>
+            </div>
+        {{/each}}
+    </div>
+</script>
    
    <div id="vk_api_transport"></div>
